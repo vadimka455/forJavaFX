@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.web.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1073.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane prefHeight="59.0" prefWidth="1073.0">
+         <children>
+            <Label layoutX="53.0" layoutY="30.0" text="Label" />
+             <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="316.0" prefWidth="444.0" styleClass="background" xmlns:fx="http://javafx.com/fxml">
+                 <children>
+                     <Label layoutX="44.0" layoutY="34.0" styleClass="header" text="Toggle Button" />
+                     <Label layoutX="80.0" layoutY="145.0" styleClass="item-title" text="normal unselected" />
+                     <Label layoutX="305.0" layoutY="145.0" styleClass="item-title" text="disabled" />
+                     <ToggleButton layoutX="70.0" layoutY="168.0" mnemonicParsing="false" text="ToggleButton" />
+                     <ToggleButton disable="true" layoutX="271.0" layoutY="168.0" mnemonicParsing="false" text="ToggleButton" />
+                     <ToggleButton layoutX="70.0" layoutY="246.0" mnemonicParsing="false" selected="true" text="ToggleButton" />
+                     <Label layoutX="86.0" layoutY="227.0" styleClass="item-title" text="normal selected" />
+                 </children>
+             </AnchorPane>
+         </children>
+      </Pane>
+      <Pane layoutY="59.0" prefHeight="341.0" prefWidth="70.0">
+         <children>
+            <Button layoutY="6.0" mnemonicParsing="false" text="Button" />
+         </children>
+      </Pane>
+    <AnchorPane layoutX="300.0" layoutY="71.0" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+      <Pane layoutX="70.0" layoutY="59.0" prefHeight="642.0" prefWidth="830.0">
+         <children>
+            <HTMLEditor htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot;&gt;&lt;/body&gt;&lt;/html&gt;" prefHeight="642.0" prefWidth="830.0" />
+         </children>
+      </Pane>
+      <TreeView layoutX="900.0" layoutY="59.0" prefHeight="642.0" prefWidth="174.0" />
+   </children>
+</Pane>

@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="forJavaFX:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/forJavaFX_jar</output-path>
+    <root id="archive" name="forJavaFX.jar">
+      <element id="module-output" name="forJavaFX" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.8.0/gson-2.8.0.jar" path-in-jar="/" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/LightTheme.css" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/DarkTheme.css" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/mainicon.png" />
+    </root>
+  </artifact>
+</component>
