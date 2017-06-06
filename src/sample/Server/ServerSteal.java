@@ -1,18 +1,24 @@
-package sample;
+package sample.Server;
 
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import sample.Potatoes;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.prefs.Preferences;
 
-public class Steal {
+public class ServerSteal {
     private LinkedList<Potatoes> clubni = new LinkedList<>();
-
+    LinkedList<Potatoes> getClubni(){
+        return clubni;
+    }
+    void setClubni(LinkedList<Potatoes> clubni){
+        this.clubni=clubni;
+    }
     void stealPotatoes(File file) throws Exception {
         Thread loadObject = new Thread(() -> {
             String filename = file.getPath();
@@ -25,9 +31,9 @@ public class Steal {
     }
     public void stealPotatoes() throws Exception {
         Thread loadObject = new Thread(() -> {
-//            Preferences prefs = Preferences.userNodeForPackage(Main.class);
-//            String filename = prefs.get("filePath", null);
-//            read(filename);
+            Preferences prefs = Preferences.userNodeForPackage(Server.class);
+            String filename = prefs.get("filePath", null);
+            read(filename);
 
         });
         loadObject.start();
@@ -50,13 +56,10 @@ public class Steal {
             Gson gson = gsonBuilder.create();
             Type potatoesListType = new TypeToken<LinkedList<Potatoes>>() {
             }.getType();
-            new Processing().getSteal().clubni = gson.fromJson(json, potatoesListType);
-            new Processing().getSteal().clubni.sort(
+            new ServerProcess().getSteal().setClubni(gson.fromJson(json, potatoesListType));
+            new ServerProcess().getSteal().getClubni().sort(
                     (Potatoes pot1, Potatoes pot2) ->
                             (int) (pot2.getWeight() - pot1.getWeight()));
         } catch (Exception ignored) {}
-    }
-    LinkedList<Potatoes> getClubni(){
-        return this.clubni;
     }
 }

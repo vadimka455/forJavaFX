@@ -1,19 +1,28 @@
 package sample;
 
 
-public class Potatoes {
+import java.io.Serializable;
+
+public class Potatoes implements Serializable {
+    static final long serialVersionUID = 10L;
     private double weight = 1;
     private String color = "White";
-    Potatoes(String color, int weight) {
+    private int id;
+    public Potatoes(int id, String color, int weight){
+        this.id=id;
+        this.color=color;
+        this.weight=weight;
+    }
+    public Potatoes(String color, int weight) {
         this.color = color;
         this.weight = weight;
     }
 
-    Potatoes(double weight) {
+    public Potatoes(double weight) {
         this.weight = weight;
     }
 
-    Potatoes() {
+    public Potatoes() {
         //
     }
 
@@ -31,6 +40,13 @@ public class Potatoes {
 
     void setColor(String color) {
         this.color = color;
+    }
+
+    public int hashCode(){
+        return (int)this.weight+this.color.length()+this.id;
+    }
+    public int getId(){
+        return id;
     }
 
 }

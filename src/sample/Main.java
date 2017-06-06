@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Orientation;
@@ -16,34 +17,38 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import sun.awt.windows.ThemeReader;
 
 import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.prefs.Preferences;
- class Main extends Application {
+import java.util.Timer;
+
+public class Main extends Application {
     private AnchorPane pane1 = new AnchorPane();
     private AnchorPane pane2 = new AnchorPane();
     private AnchorPane pane3 = new AnchorPane();
-    private AnchorPane pane4 = new AnchorPane();
+    static AnchorPane pane4 = new AnchorPane();
     private ToggleButton toggleButton = new ToggleButton("Dark Theme");
     private HTMLEditor htmlEditor = new HTMLEditor();
-    private CheckBox checkbox1 = new CheckBox("color");
-    private CheckBox checkbox2 = new CheckBox("weight");
+    private static CheckBox checkbox1 = new CheckBox("color");
+    private static CheckBox checkbox2 = new CheckBox("weight");
     private Button button1 = new Button("Add\nif\nmax");
     private Button button2 = new Button("Remove\ngreater");
     private Button button3 = new Button("Remove\nfirst");
     private Button button4 = new Button("Remove\nlast");
+    private static Commands commands= new Commands();
+    private static  Connect connect = commands.getConnect();
     private long buttonsClick = 0;
     private boolean doThis = true;
 
     public static void main(String[] args) {
-
-        launch(args);
+        LauncherImpl.launchApplication(Main.class, MyPreloader.class, args);
     }
 
+
     private void setSoundsForButton(Button button) {
-        button.setOnMouseClicked(event -> new Audio(Main.class.getResourceAsStream("/ChuToy.wav")).play());
+        //button.setOnMouseClicked(event -> new Audio(Main.class.getResourceAsStream("/ChuToy.wav")).play());
     }
 
     private void showhelp() {
@@ -76,14 +81,14 @@ import java.util.prefs.Preferences;
 
     private void ifmore10(Button button) {
         if (button.getText().equals(button3.getText())|| button.getText().equals(button4.getText())) {
-            if (Process.getSteal().clubni.size() == 0 ) {
+            if (connect.getListOfPotatoes().size() == 0 ) {
                 buttonsClick++;
             } else {
                 buttonsClick = 0;
             }
             if (buttonsClick >= 10) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Коллекция давно пуста...Нечего тут на кнопки понапрасну тыкать :/", ButtonType.OK);
-                new Audio(Main.class.getResourceAsStream("/ifmore10.wav")).play();
+                //new Audio(Main.class.getResourceAsStream("/ifmore10.wav")).play();
                 alert.showAndWait();
 
             }
@@ -92,46 +97,29 @@ import java.util.prefs.Preferences;
 
     }
 
-    private void addListenerOpenButton(MenuItem button, Stage primaryStage) {
-        button.setOnAction(event -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
-            Preferences prefs = Preferences.userNodeForPackage(Main.class);
-            String filePath = prefs.get("filePath", null);
-            if (!filePath.isEmpty()) {
-                fileChooser.setInitialFileName(filePath);
-            }
-            fileChooser.setTitle("Open Resource File");
-            File fileChoose = fileChooser.showOpenDialog(primaryStage);
-            if (!fileChoose.getName().isEmpty()) {
-                try {
-                    Process.start(fileChoose);
-                    prefs.put("filePath", fileChoose.getPath());
-                    pane3.getChildren().remove(htmlEditor);
-                    new Audio(Main.class.getResourceAsStream("/open.wav")).play();
-                    buttonsClick=0;
-                    setTreeView(Process.getSteal().clubni, pane4);
-                } catch (Exception ignored) {
-                }
-            }
-        });
+    private void addListenerConnectButton(MenuItem button) {
+            button.setOnAction(event->commands.getPotatoes());
     }
 
     private void setStartedObject() {
         try {
-            Process.getSteal().stealPotatoes();
+            new Processing().getSteal().stealPotatoes();
         } catch (Exception ignored) {
         }
     }
+    void startMonitorTreeView(){
 
-    private void setTreeView(LinkedList<Potatoes> clubni, Pane pane4) {
+        //Platform.runLater(()->setTreeView(connect.getListOfPotatoes()));
+
+    }
+    static void setTreeView(LinkedList<Potatoes> clubni) {
         Iterator<Potatoes> iterator = clubni.iterator();
         Potatoes potatoes;
         TreeItem<String> rootItem = new TreeItem<>("Клубни");
         rootItem.setExpanded(true);
         while (iterator.hasNext()) {
             potatoes = iterator.next();
-            TreeItem<String> rootItem2 = new TreeItem<>("Картошка");
+            TreeItem<String> rootItem2 = new TreeItem<>("Картошка #"+potatoes.getId());
             rootItem2.setExpanded(true);
             TreeItem<String> item;
             if (checkbox1.isSelected()) {
@@ -147,7 +135,10 @@ import java.util.prefs.Preferences;
         TreeView<String> tree = new TreeView<>(rootItem);
         tree.setStyle("-fx-background-color: #1d1d1d");
         pane4.getChildren().add(tree);
-        anchorSetPosition(tree);
+        AnchorPane.setRightAnchor(tree, 0.0);
+        AnchorPane.setTopAnchor(tree, 0.0);
+        AnchorPane.setLeftAnchor(tree, 0.0);
+        AnchorPane.setBottomAnchor(tree, 0.0);
 
     }
 
@@ -177,23 +168,23 @@ import java.util.prefs.Preferences;
             if (button.getText().equals(button1.getText())) {
                 String string = "{\"weight\":" + values[1] + ",\"color\":" + values[0] + "}";
                 buttonsClick=0;
-                if (!ifHaveMorethanwant(Process.getSteal().clubni)) {
+                if (!ifHaveMorethanwant(new Processing().getSteal().getClubni())) {
                     return;
                 }
-                Commands.add_if_max(string, Process.getSteal().clubni);
+                commands.add_if_max(string, new Processing().getSteal().getClubni());
 
             }
             if (button.getText().equals(button2.getText())) {
                 String string = "{\"weight\":" + values[1] + ",\"color\":" + values[0] + "}";
-                if (Process.getSteal().clubni.size()==0){
+                /*if (new Processing().getSteal().getClubni().size()==0){
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Коллекция и так пуста...", ButtonType.OK);
                     alert.showAndWait();
                     vBox.getChildren().remove(sendText);
                     return;
-                }
-                Commands.remove_greater(string, Process.getSteal().clubni);
+                }*/
+                commands.remove_greater(string, new Processing().getSteal().getClubni());
             }
-            setTreeView(Process.getSteal().clubni, pane4);
+            startMonitorTreeView();
             vBox.getChildren().remove(sendText);
         });
     }
@@ -233,7 +224,7 @@ import java.util.prefs.Preferences;
         } catch (Exception e) {
             ButtonType buttonTypeAgain = new ButtonType("Again", ButtonBar.ButtonData.OTHER);
             Alert alert = new Alert(Alert.AlertType.NONE, text, buttonTypeAgain, ButtonType.CLOSE);
-            new Audio(Main.class.getResourceAsStream("/error.wav")).play();
+            //new Audio(Main.class.getResourceAsStream("/error.wav")).play();
             alert.showAndWait();
             doThis = false;
             if (alert.getResult() == buttonTypeAgain) {
@@ -253,20 +244,21 @@ import java.util.prefs.Preferences;
                     "JSON files", "*.json"));
             File file = fileChooser.showSaveDialog(primaryStage);
             if (file != null) {
-                Commands.save(Process.getSteal().clubni, file);
-                Preferences.userNodeForPackage(Main.class).put("filePath", file.getPath());
+                commands.save(new Processing().getSteal().getClubni(), file);
             }
         });
     }
 
     private void addListenerCheckBoxs(CheckBox checkBox) {
-        checkBox.setOnAction(event -> setTreeView(Process.getSteal().clubni, pane4));
+        checkBox.setOnAction(event -> {
+            setTreeView(connect.getListOfPotatoes());
+        });
     }
 
     private boolean ifHaveMorethanwant(LinkedList<Potatoes> clubni) {
         if (clubni.size() > 600) {
             Alert alert = new Alert(Alert.AlertType.NONE, "Воу-воу-воу. Их уже и так много!! Хватит!", ButtonType.OK);
-            new Audio(Main.class.getResourceAsStream("/ifmore10.wav")).play();
+            //new Audio(Main.class.getResourceAsStream("/ifmore10.wav")).play();
             alert.showAndWait();
             return false;
         }
@@ -275,8 +267,7 @@ import java.util.prefs.Preferences;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Process.shutdown(new File(Preferences.userNodeForPackage(Main.class).get("filePath", null)));
-
+        System.out.println("here");
         pane1.setStyle("-fx-background-color:#3a3a3a;-fx-alignment: baseline-right");
         pane3.setStyle("-fx-border-color:#3a3a3a; -fx-border-width: 0 1 0 1 ");
 
@@ -347,38 +338,38 @@ import java.util.prefs.Preferences;
         Menu menuhelp = new Menu("Help");
         menuBar.getMenus().addAll(file, smthelse, menuhelp);
         //smthelse.setOnAction(event -> new Audio(new File("content/sounds/nothing.wav")).play());  //TODO --> заменить на что-то кнопку "Ничего"
-        MenuItem fileOpen = new MenuItem("Open");
+        MenuItem fileConnect = new MenuItem("Connect");
         MenuItem fileSave = new MenuItem("Save");
         MenuItem fileSaveAs = new MenuItem("Save as ...");
         MenuItem fileDef = new MenuItem("Default objects");
         MenuItem fileExit = new MenuItem("Exit");
         MenuItem helpInstr = new MenuItem("Instruction");
-        fileOpen.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
+        fileConnect.setAccelerator(new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN));
         fileSave.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         fileDef.setAccelerator(new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_DOWN));
         fileExit.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN));
         fileSaveAs.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN));
         helpInstr.setAccelerator(new KeyCodeCombination(KeyCode.F1));
-        file.getItems().addAll(fileOpen, fileDef, fileSave, fileSaveAs, fileExit);
+        file.getItems().addAll(fileConnect,fileDef, fileSaveAs, fileExit);
         menuhelp.getItems().add(helpInstr);
-        addListenerOpenButton(fileOpen, primaryStage);
+        addListenerConnectButton(fileConnect);
         addListenerSaveAs(fileSaveAs, primaryStage);
 
         fileDef.setOnAction(event -> {
             pane3.getChildren().clear();
             try {
-                if (!ifHaveMorethanwant(Process.getSteal().clubni)) {
+                if (!ifHaveMorethanwant(new Processing().getSteal().getClubni())) {
                     return;
                 }
-                Commands.add_default_elements(Process.getSteal().clubni);
-                setTreeView(Process.getSteal().clubni, pane4);
+                commands.add_default_elements(new Processing().getSteal().getClubni());
+                startMonitorTreeView();
+//                setTreeView(connect.getListOfPotatoes(), pane4);
 
             } catch (Exception ignored) {
             }
         });
-        fileSave.setOnAction(event -> Commands.save(Process.getSteal().clubni, new File(Preferences.userNodeForPackage(Main.class).get("filePath", null))));
         fileExit.setOnAction(event -> {
-            new Audio(Main.class.getResourceAsStream("/Exit.wav")).play();
+            //new Audio(Main.class.getResourceAsStream("/Exit.wav")).play();
 
             try {
                 double millis = 3000;
@@ -391,6 +382,7 @@ import java.util.prefs.Preferences;
                 }
             } catch (Exception ignored) {
             }
+            System.exit(1);
             primaryStage.hide();
         });
         helpInstr.setOnAction((ActionEvent event) -> showhelp());
@@ -415,19 +407,22 @@ import java.util.prefs.Preferences;
         button3.setOnAction(event -> {
             pane3.getChildren().clear();
             pane3.getChildren().remove(htmlEditor);
-            Commands.remove_first(Process.getSteal().clubni);
+            commands.remove_first(new Processing().getSteal().getClubni());
+            startMonitorTreeView();
+
             ifmore10(button3);
-            setTreeView(Process.getSteal().clubni, pane4);
+//            setTreeView(connect.getListOfPotatoes(), pane4);
         });
         button4.setOnAction(event -> {
             pane3.getChildren().clear();
-            Commands.remove_last(Process.getSteal().clubni);
+            commands.remove_last(new Processing().getSteal().getClubni());
+            startMonitorTreeView();
+//            client.remove_last();
             ifmore10(button4);
-            setTreeView(Process.getSteal().clubni, pane4);
+//            setTreeView(connect.getListOfPotatoes(), pane4);
         });
         toggleButton.setOnAction(event -> {
-
-            new Audio(Main.class.getResourceAsStream("/thems.wav")).play();
+            //new Audio(Main.class.getResourceAsStream("/thems.wav")).play();
             try {
                 Thread.sleep(3000);
             } catch (Exception ignored) {
@@ -458,11 +453,27 @@ import java.util.prefs.Preferences;
         primaryStage.getScene().getStylesheets().add("DarkTheme.css");
         Image image = new Image("mainicon.png");
         primaryStage.getIcons().add(image);
+//        primaryStage.initStyle(StageStyle.UNDECORATED); //TODO Вот эта крутая штука
         primaryStage.show();
+        startMonitorTreeView();
+
         setStartedObject();
-        setTreeView(Process.getSteal().clubni, pane4);
-        new Audio(Main.class.getResourceAsStream("/Welcome.wav")).play();
-        Alert alert = new Alert(Alert.AlertType.NONE, "Добро пожаловать в мое приложение", ButtonType.OK);
-        alert.showAndWait();
+//        setTreeView(connect.getListOfPotatoes());
+        //new Audio(Main.class.getResourceAsStream("/Welcome.wav")).play();
+        //Alert alert = new Alert(Alert.AlertType.NONE, "Добро пожаловать в мое приложение", ButtonType.OK);
+        //alert.showAndWait();
     }
+    @Override
+    public void init() throws Exception {
+        checkbox1.setSelected(true);
+        checkbox2.setSelected(true);
+        commands.getPotatoes();
+        Thread.sleep(5000);
+
+    }
+
+
+
+
+
 }

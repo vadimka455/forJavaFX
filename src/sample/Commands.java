@@ -3,77 +3,113 @@ package sample;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.LinkedList;
 
-public class Commands {
+class Commands {
 
-    static private GsonBuilder gsonBuilder = new GsonBuilder();
-    static private Gson gson = gsonBuilder.create();
-    static private Type potatoesType = new TypeToken<Potatoes>() {
-    }.getType();
-    public static void add_if_max(String jsonStr, LinkedList<Potatoes> newclubni) {
+    private GsonBuilder gsonBuilder = new GsonBuilder();
+    private Gson gson = gsonBuilder.create();
+
+    private Type potatoesType = new TypeToken<Potatoes>() {}.getType();
+    private Connect connect= new Connect();
+    void add_if_max(String jsonStr, LinkedList<Potatoes> newclubni) {
 
         try {
             Potatoes pot = gson.fromJson(jsonStr, potatoesType);
-            if (newclubni.size() != 0) {
-                if (newclubni.element().getWeight() < pot.getWeight()) {
-                    newclubni.addFirst(pot);
-//                    new Audio(new File("sounds/add_if_max.wav")).play();
+
+            Thread add_if_max= new Thread(()->{
+                try {
+                    System.out.println(jsonStr);
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(1024*1024);
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+                    objectOutputStream.writeObject(pot);
+                    byte[]type ={(byte)1};
+                    connect.sendPackages(type,byteArrayOutputStream.toByteArray(),Connect.intToByteArray(pot.hashCode()));
+                    //byte [] data= ArrayUtils.addAll(type,byteArrayOutputStream.toByteArray());
+                    byteArrayOutputStream.close();
+                    System.out.println(new String(type));
+//                    new Connect().setGetBack(true);
+//                    new Connect().getSendedPackge();
+
+                    System.out.println("Отправил 1");
+                }catch (Exception ignored){
+                    ignored.printStackTrace();
                 }
-            } else {
-                newclubni.addFirst(pot);
-//                new Audio(new File("sounds/add_if_max.wav")).play();
-            }
+
+            });
+            add_if_max.start();
+
+
         }  catch (Exception ignored) {}
     }
-    public static void remove_greater(String jsonStr, LinkedList<Potatoes> newclubni) {
-        try {
-            Potatoes potatoes = gson.fromJson(jsonStr, potatoesType);
-            newclubni.removeIf(potatoes1 -> potatoes.getWeight() < potatoes1.getWeight());
-            new Audio(Main.class.getResourceAsStream("/remove_greater.wav")).play();
-        } catch (Exception ignored) {        }
+    void remove_greater(String jsonStr, LinkedList<Potatoes> newclubni) {
+        Potatoes pot =new Potatoes();
+        Thread remove_greater= new Thread(()->{
+            try {
+                System.out.println(jsonStr);
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(1024*1024);
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+                objectOutputStream.writeObject(pot);
+                byte[]type ={(byte)2};
+                connect.sendPackages(type,byteArrayOutputStream.toByteArray(),Connect.intToByteArray(pot.hashCode()));
+                //byte [] data= ArrayUtils.addAll(type,byteArrayOutputStream.toByteArray());
+                byteArrayOutputStream.close();
+                System.out.println(new String(type));
+//                new Connect().setGetBack(true);
+//                new Connect().getSendedPackge();
+                //System.out.println(new String(data));
+
+                System.out.println("Отправил 2");
+            }catch (Exception ignored){
+                ignored.printStackTrace();
+            }
+
+        });
+        remove_greater.start();
     }
 
-    public static void remove_last(LinkedList<Potatoes> newclubni) {
-        if (newclubni.size() != 0) {
-            newclubni.removeLast();
-//            new Audio(new File("sounds/remove_first-last.wav")).play();
-        }
+    void remove_last(LinkedList<Potatoes> newclubni) {
+        byte[]command={(byte)4};
+        connect.sendPackages(command,null,null);
+//        new Connect().setGetBack(true);
+//        new Connect().getSendedPackge();
     }
 
 
-    public static void add_default_elements(LinkedList<Potatoes> clubni) throws Exception {
-        clubni.addLast(new Potatoes(3));
-        clubni.addLast(new Potatoes(4));
-        clubni.addLast(new Potatoes("Red", 8));
-        clubni.addLast(new Potatoes("Red", 2));
-        clubni.sort(
-                (Potatoes pot1, Potatoes pot2) ->{
-                       if (pot2.getWeight() - pot1.getWeight()>0){
-                           return 1;
-                       }
-                       else if (pot2.getWeight() - pot1.getWeight()<0){
-                           return -1;
-                       }else {return 0;}
-                });
+    void add_default_elements(LinkedList<Potatoes> clubni) throws Exception {
 
+        Thread add_deffault_elements= new Thread(()->{
+            try {
+                byte[]type ={(byte)5};
+                connect.sendPackages(type,null, null);
+                System.out.println("Можно? " +connect.getCanSetTree());
+                //byte [] data= ArrayUtils.addAll(type,byteArrayOutputStream.toByteArray());
+
+//                new Connect().setGetBack(true);
+//                new Connect().getSendedPackge();
+                //System.out.println(new String(data));
+
+                System.out.println("Отправил 5");
+//                new Connect().getSendedPackge();
+            }catch (Exception ignored){
+                ignored.printStackTrace();
+            }
+
+        });
+        add_deffault_elements.start();
     }
-    public static void remove_first(LinkedList<Potatoes> newclubni) {
-        if (newclubni.size() != 0) {
-            newclubni.removeFirst();
-//            new Audio(new File("sounds/remove_first-last.wav")).play();
-        }
+   void remove_first(LinkedList<Potatoes> newclubni) {
+       byte[]command={(byte)3};
+       connect.sendPackages(command,null,null);
+//       new Connect().setGetBack(true);
+       //new Connect().getSendedPackge();
     }
 
-    public static String save(LinkedList<Potatoes> newclubni, File file) {
+    void save(LinkedList<Potatoes> newclubni, File file) {
         String filename = file.getPath();
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(filename);
@@ -81,9 +117,14 @@ public class Commands {
             output.write(gson.toJson(newclubni));
             output.close();
             new Audio(Main.class.getResourceAsStream("/save_saveAs.wav")).play();
-            return "Файл сохранен";
         } catch (IOException ioe) {
-            return ("Проблема с вводом данных");
         }
+    }
+    void getPotatoes(){
+        byte[]command={(byte)6};
+        connect.sendPackages(command,null,null);
+    }
+    Connect getConnect(){
+        return connect;
     }
 }
