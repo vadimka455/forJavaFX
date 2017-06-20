@@ -692,7 +692,7 @@
  ******************************************************************************/
 
 .text-field{
-    -fx-skin: "jfxtras.styles.jmetro8.MetroTextFieldSkin";
+    /*-fx-skin: "jfxtras.styles.jmetro8.MetroTextFieldSkin";*/
 }
 
 .text-input{
@@ -765,7 +765,7 @@
  ******************************************************************************/
 
 .password-field {
-    -fx-skin: "jfxtras.styles.jmetro8.MetroPasswordFieldSkin";
+    /*-fx-skin: "jfxtras.styles.jmetro8.MetroPasswordFieldSkin";*/
 }
 
 .password-field > .right-button > .right-button-graphic {
@@ -799,7 +799,7 @@
  ******************************************************************************/
 
 .slider {
-    -fx-skin: "jfxtras.styles.jmetro8.FilledSliderSkin";
+    /*-fx-skin: "jfxtras.styles.jmetro8.FilledSliderSkin";*/
 }
 
 .slider .thumb {

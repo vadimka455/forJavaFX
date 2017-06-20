@@ -3,7 +3,7 @@ package sample.Server;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import sample.Potatoes;
+import sample.Entity.Potatoes;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -19,7 +19,7 @@ class ServerCommands {
     private ServerDB serverDB = new ServerDB();
     private Potatoes readPotatoes(byte[] object){
         Potatoes potatoes = new Potatoes();
-        System.out.println("ПОлучил объект");
+
         try {
             java.lang.Object objectInputStream =new ObjectInputStream(new ByteArrayInputStream(object)).readObject();
             return (Potatoes) objectInputStream;
@@ -47,21 +47,18 @@ class ServerCommands {
         }  catch (Exception ignored) {
             ignored.printStackTrace();
         }
-        System.out.println(new Gson().toJson(newclubni));
-        System.out.println("add_if_max");
     }
     void remove_greater( byte[] object) {
         Potatoes potatoes =readPotatoes(object);
         LinkedList<Potatoes> needToDelete = serverDB.getData();
-        System.out.println(potatoes.getWeight());
 
         try {
-            needToDelete.removeIf(potatoes1 -> potatoes.getWeight() >= potatoes1.getWeight());
+                    needToDelete.removeIf(pot ->pot.getWeight()<=potatoes.getWeight());
             serverDB.deleteData(needToDelete);
             //new Audio(Main.class.getResourceAsStream("/remove_greater.wav")).play();
-        } catch (Exception ignored) {        }
-        System.out.println(new Gson().toJson(needToDelete));
-        System.out.println("remove_greater");
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+        }
     }
 
     void remove_last() {
@@ -72,7 +69,6 @@ class ServerCommands {
             serverDB.deleteData(needToDelete);
 //            new Audio(new File("sounds/remove_first-last.wav")).play();
         }
-        System.out.println("remove_last");
     }
 
 
@@ -94,7 +90,6 @@ class ServerCommands {
 //            new Audio(new File("sounds/remove_first-last.wav")).play();
 
         }
-        System.out.println("remove_first");
     }
 
     void save(LinkedList<Potatoes> newclubni, File file) {

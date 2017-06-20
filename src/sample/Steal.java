@@ -4,11 +4,11 @@ package sample;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import sample.Entity.Potatoes;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.LinkedList;
-import java.util.prefs.Preferences;
 
 public class Steal {
     private LinkedList<Potatoes> clubni = new LinkedList<>();
@@ -24,16 +24,6 @@ public class Steal {
         }catch (InterruptedException e){e.printStackTrace();}
     }
     public void stealPotatoes() throws Exception {
-        Thread loadObject = new Thread(() -> {
-//            Preferences prefs = Preferences.userNodeForPackage(Main.class);
-//            String filename = prefs.get("filePath", null);
-//            read(filename);
-
-        });
-        loadObject.start();
-        try {
-            loadObject.join();
-        }catch (InterruptedException e){e.printStackTrace();}
     }
     private void read(String filename){
         try {
