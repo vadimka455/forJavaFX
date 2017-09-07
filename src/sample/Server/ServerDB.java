@@ -19,7 +19,7 @@ import java.util.Properties;
 /**
  * Created by vadim on 05.06.2017.
  */
-public class ServerDB implements CRUD {
+public class ServerDB implements IServer {
     private Properties properties = new Properties();
     final private String USER = "postgres";
     final private String PASSWORD = "postgres";

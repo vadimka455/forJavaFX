@@ -11,6 +11,8 @@ import java.lang.reflect.Type;
 import java.time.ZonedDateTime;
 import java.util.LinkedList;
 
+import static sample.IntByteOperation.intToByteArray;
+
 class Commands {
 
     private GsonBuilder gsonBuilder = new GsonBuilder();
@@ -31,7 +33,7 @@ class Commands {
                     ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
                     objectOutputStream.writeObject(pot);
                     byte[] type = {(byte) 1};
-                    connect.sendPackages(type, byteArrayOutputStream.toByteArray(), Connect.intToByteArray(pot.hashCode()));
+                    connect.sendPackages(type, byteArrayOutputStream.toByteArray(), intToByteArray(pot.hashCode()));
                     byteArrayOutputStream.close();
                 } catch (Exception ignored) {
                     ignored.printStackTrace();
@@ -53,7 +55,7 @@ class Commands {
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
                 objectOutputStream.writeObject(pot);
                 byte[] type = {(byte) 2};
-                connect.sendPackages(type, byteArrayOutputStream.toByteArray(), Connect.intToByteArray(pot.hashCode()));
+                connect.sendPackages(type, byteArrayOutputStream.toByteArray(), intToByteArray(pot.hashCode()));
                 byteArrayOutputStream.close();
             } catch (Exception ignored) {
                 ignored.printStackTrace();

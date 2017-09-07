@@ -4,6 +4,7 @@ import sample.Annotation.Column;
 import sample.Annotation.Entity;
 import sample.Entity.Potatoes;
 
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,7 +15,7 @@ import java.util.List;
 /**
  * Created by vadim on 19.06.2017.
  */
-public interface CRUD {
+public interface IServer {
     void putData(LinkedList<Potatoes> gettingPotatoes);
     LinkedList<Potatoes> getData();
     void deleteData(LinkedList<Potatoes> gettingPotatoes);
@@ -35,7 +36,7 @@ public interface CRUD {
                             .append(column.type())
                             .append(",\n")
                 );
-        createTable.replace(createTable.length()-2,createTable.length()-1,"");
+        createTable.replace(createTable.length()-2,createTable.length(),"");
         createTable.append(");");
         try(Statement statement = connection.createStatement()){
             statement.execute(String.valueOf(createTable));

@@ -6,7 +6,7 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 class ServerSendingPackage {
-    private static int port = 8888;
+    private static int port = 1488;
     private static String host = "0.0.0.0";
     private static SocketAddress socketAddress = new InetSocketAddress(host,port);
     private static DatagramChannel datagramChannel;

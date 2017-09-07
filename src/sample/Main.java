@@ -52,14 +52,12 @@ public class Main extends Application {
     private AnchorPane pane2 = new AnchorPane();
     private AnchorPane pane3 = new AnchorPane();
     private ToggleButton toggleButton = new ToggleButton();
-    private HTMLEditor htmlEditor = new HTMLEditor();
     private Button button1 = new Button();
     private Button button2 = new Button();
     private Button button3 = new Button();
     private Button button4 = new Button();
     private long buttonsClick = 0;
     private GridPane grid = new GridPane();
-    private boolean haveWriteForm;
     private Text scenetitle = new Text(resourceBundle.getString("enterItem"));
     private Label color = new Label(resourceBundle.getString("colorObject"));
     private Button sendItem = new Button(resourceBundle.getString("sendItem"));
@@ -123,6 +121,7 @@ public class Main extends Application {
 //                dialogPane.getScene().getWindow().hide();
 //            });
 //        }
+//        TODO посмотреть этот кусок
 //        dialogPane.getScene().setRoot(new Label());
 //        Scene scene = new Scene(dialogPane);
 //        Stage dialog = new Stage();
@@ -170,14 +169,7 @@ public class Main extends Application {
         }
     }
 
-    void startMonitorTreeView() {
-
-        //Platform.runLater(()->setTreeView(connect.getListOfPotatoes()));
-
-    }
-
     private void writeForm2(Button button) {
-        haveWriteForm = true;
         TextField weightTextField = new TextField("");
         Label wrongcolor = new Label("");
 
@@ -264,7 +256,6 @@ public class Main extends Application {
         sendItem.setOnAction(event -> {
             if (!(colorTextField.getText().isEmpty() || weightTextField.getText().isEmpty())) {
                 pane3.getChildren().removeAll(grid);
-                haveWriteForm = false;
                 String[] values = {colorTextField.getText(), weightTextField.getText()};
                 String string = "{\"weight\":" + values[1] + ",\"color\":\"" + values[0] + "\"}";
 
@@ -300,6 +291,7 @@ public class Main extends Application {
 
             if ("false".equals(config.getProperty("firstLaunching"))){
                 //
+                //TODO сделать предзагрузку
             }else{
                 config.setProperty("firstLaunching","false");
                 VBox vBox = new VBox();
@@ -387,7 +379,9 @@ public class Main extends Application {
         } else {
             toggleButton.setText(resourceBundle.getString("darkTheme"));
         }
-        setTreeView(connect.getListOfPotatoes());
+        if (!connect.getListOfPotatoes().isEmpty()) {
+            setTreeView(connect.getListOfPotatoes());
+        }
         scenetitle = new Text(resourceBundle.getString("enterItem"));
         color = new Label(resourceBundle.getString("colorObject"));
         sendItem = new Button(resourceBundle.getString("sendItem"));
@@ -413,7 +407,9 @@ public class Main extends Application {
 
     private void addListenerCheckBoxs(CheckBox checkBox) {
         checkBox.setOnAction(event -> {
-            setTreeView(connect.getListOfPotatoes());
+            if (!connect.getListOfPotatoes().isEmpty()) {
+                setTreeView(connect.getListOfPotatoes());
+            }
         });
     }
 
@@ -482,17 +478,6 @@ public class Main extends Application {
         flowPane.setAlignment(Pos.TOP_CENTER);
         pane2.getChildren().add(flowPane);
         anchorSetPosition(flowPane);
-
-
-        htmlEditor.lookup(".bottom-toolbar").setVisible(false);
-        htmlEditor.lookup(".bottom-toolbar").setManaged(false);
-        htmlEditor.lookup(".top-toolbar").setManaged(false);
-        htmlEditor.lookup(".top-toolbar").setVisible(false);
-
-        htmlEditor.setPrefSize(0.68 * 930, 300);
-        htmlEditor.setHtmlText("Тут что-то будет...");
-        anchorSetPosition(htmlEditor);
-
         menuBar.getMenus().addAll(file, nothing, menuhelp);
         fileConnect.setAccelerator(new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN));
         nothingLanguage.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
@@ -519,8 +504,6 @@ public class Main extends Application {
                     return;
                 }
                 commands.add_default_elements(new Processing().getSteal().getClubni());
-                startMonitorTreeView();
-//                setTreeView(connect.getListOfPotatoes(), pane4);
 
             } catch (Exception ignored) {
             }
@@ -563,16 +546,12 @@ public class Main extends Application {
         addListenerEditButtons(button2);
         button3.setOnAction(event -> {
             pane3.getChildren().clear();
-            pane3.getChildren().remove(htmlEditor);
             commands.remove_first(new Processing().getSteal().getClubni());
-            startMonitorTreeView();
-
             ifmore10(button3);
         });
         button4.setOnAction(event -> {
             pane3.getChildren().clear();
             commands.remove_last(new Processing().getSteal().getClubni());
-            startMonitorTreeView();
             ifmore10(button4);
         });
         toggleButton.setOnAction(event -> {
@@ -582,7 +561,7 @@ public class Main extends Application {
                 toggleButton.setText(resourceBundle.getString("lightTheme"));
                 primaryStage.getScene().getStylesheets().remove("DarkTheme.css");
                 primaryStage.getScene().getStylesheets().add("LightTheme.css");
-                pane1.setStyle("-fx-background-color:#919191;-fx-alignment: baseline-right");
+                pane1.setStyle("-fx-background-color:#919191;-fx-alignment: baseline-right"); //TODO вынести в CSS
                 pane3.setStyle("-fx-border-color:#919191; -fx-border-width: 0 1 0 1 ");
                 root.setStyle("-fx-background-color:white");
                 primaryStage.setTitle("Bear in white");
@@ -610,7 +589,6 @@ public class Main extends Application {
         primaryStage.getScene().getStylesheets().add("DarkTheme.css");
         primaryStage.getIcons().add(image1);
         primaryStage.show();
-        startMonitorTreeView();
 
 
         setStartedObject();

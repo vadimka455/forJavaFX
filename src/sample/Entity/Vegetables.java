@@ -92,6 +92,11 @@ public abstract class Vegetables implements Serializable, Comparable {
         return this.getWeight()-((Vegetables)o).getWeight();
     }
 
+    public static void main(String[] args) {
+        Vegetables v=new Vegetables() {
+        };
+        v.compareTo(null);
+    }
     @Override
     public int hashCode() {
         return color.length()+weight+id;
