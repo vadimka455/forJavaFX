@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ResourceBundleManager">
+    <file url="file://$PROJECT_DIR$/src/GUITexts.properties" />
+    <file url="file://$PROJECT_DIR$/src/GUITexts_cat.properties" />
+    <file url="file://$PROJECT_DIR$/src/GUITexts_es_HN.properties" />
+    <file url="file://$PROJECT_DIR$/src/GUITexts_nl.properties" />
+    <file url="file://$PROJECT_DIR$/src/GUITexts_ru.properties" />
+    <custom-resource-bundle>
+      <file value="file://$PROJECT_DIR$/src/GUITexts.properties" />
+      <file value="file://$PROJECT_DIR$/src/GUITexts_cat.properties" />
+      <file value="file://$PROJECT_DIR$/src/GUITexts_es_HN.properties" />
+      <file value="file://$PROJECT_DIR$/src/GUITexts_nl.properties" />
+      <file value="file://$PROJECT_DIR$/src/GUITexts_ru.properties" />
+      <base-name>GUITexts</base-name>
+    </custom-resource-bundle>
+  </component>
+</project>
