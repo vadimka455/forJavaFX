@@ -30,6 +30,7 @@ public class Server {
     private static ServerProcess serverProcess = new ServerProcess();
     private static ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
     private static boolean sendBack = false;
+    private static boolean keklolmda;
 
     public static void main(String[] args) throws Exception {
         System.out.println("Welcome");
